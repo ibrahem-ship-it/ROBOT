@@ -20,11 +20,11 @@
         .fade-in-section {
             animation: fadeInSlideUp 0.5s ease-out forwards;
         }
-        /* Styling for the code block direction */
-        .dir-ltr { direction: ltr; text-align: left; }
+        /* Code block force LTR */
+        .force-ltr { direction: ltr; text-align: left; }
     </style>
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-indigo-200">
+<body class="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-indigo-200 transition-colors duration-300">
 
     <!-- Header -->
     <header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
@@ -33,29 +33,36 @@
                 <div class="flex items-center gap-3">
                     <i class="fa-solid fa-microchip text-4xl text-indigo-400"></i>
                     <div>
-                        <h1 class="text-2xl font-bold">توثيق الروبوت متتبع الخطوط</h1>
-                        <p class="text-indigo-200 text-sm">نظام تحكم مدمج متقدم باستخدام ESP32</p>
+                        <h1 class="text-2xl font-bold" data-i18n="h_title">توثيق الروبوت متتبع الخطوط</h1>
+                        <p class="text-indigo-200 text-sm" data-i18n="h_subtitle">نظام تحكم مدمج متقدم باستخدام ESP32</p>
                     </div>
                 </div>
                 
-                <!-- Navigation Tabs -->
-                <nav class="flex flex-wrap justify-center gap-2">
-                    <button id="btn-workflow" onclick="switchTab('workflow')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-800/50 text-indigo-100 hover:bg-indigo-700 hover:text-white">
-                        <i class="fa-solid fa-code-branch"></i><span>مخطط المشروع</span>
+                <div class="flex flex-col md:flex-row items-center gap-4">
+                    <!-- Navigation Tabs -->
+                    <nav class="flex flex-wrap justify-center gap-2">
+                        <button id="btn-workflow" onclick="switchTab('workflow')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-800/50 text-indigo-100 hover:bg-indigo-700 hover:text-white">
+                            <i class="fa-solid fa-code-branch"></i><span data-i18n="nav_wf">مخطط المشروع</span>
+                        </button>
+                        <button id="btn-hardware" onclick="switchTab('hardware')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-500 text-white shadow-md">
+                            <i class="fa-solid fa-server"></i><span data-i18n="nav_hw">الهاردوير</span>
+                        </button>
+                        <button id="btn-software" onclick="switchTab('software')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-800/50 text-indigo-100 hover:bg-indigo-700 hover:text-white">
+                            <i class="fa-solid fa-code"></i><span data-i18n="nav_sw">البرمجيات</span>
+                        </button>
+                        <button id="btn-troubleshooting" onclick="switchTab('troubleshooting')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-800/50 text-indigo-100 hover:bg-indigo-700 hover:text-white">
+                            <i class="fa-solid fa-wrench"></i><span data-i18n="nav_ts">التحديات والحلول</span>
+                        </button>
+                        <button id="btn-bluetooth" onclick="switchTab('bluetooth')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-800/50 text-indigo-100 hover:bg-indigo-700 hover:text-white">
+                            <i class="fa-brands fa-bluetooth-b"></i><span data-i18n="nav_bt">التحكم والتشغيل</span>
+                        </button>
+                    </nav>
+
+                    <!-- Language Toggle Button -->
+                    <button onclick="toggleLang()" class="bg-indigo-700 border border-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-full font-bold text-sm flex items-center gap-2 transition-colors shadow-sm">
+                        <i class="fa-solid fa-language text-lg"></i> <span id="lang-text">English</span>
                     </button>
-                    <button id="btn-hardware" onclick="switchTab('hardware')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-500 text-white shadow-md">
-                        <i class="fa-solid fa-server"></i><span>الهاردوير</span>
-                    </button>
-                    <button id="btn-software" onclick="switchTab('software')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-800/50 text-indigo-100 hover:bg-indigo-700 hover:text-white">
-                        <i class="fa-solid fa-code"></i><span>البرمجيات</span>
-                    </button>
-                    <button id="btn-troubleshooting" onclick="switchTab('troubleshooting')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-800/50 text-indigo-100 hover:bg-indigo-700 hover:text-white">
-                        <i class="fa-solid fa-wrench"></i><span>التحديات والحلول</span>
-                    </button>
-                    <button id="btn-bluetooth" onclick="switchTab('bluetooth')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-800/50 text-indigo-100 hover:bg-indigo-700 hover:text-white">
-                        <i class="fa-brands fa-bluetooth-b"></i><span>التحكم والتشغيل</span>
-                    </button>
-                </nav>
+                </div>
             </div>
         </div>
     </header>
@@ -66,8 +73,8 @@
         <!-- Workflow Section -->
         <section id="section-workflow" class="tab-content hidden fade-in-section space-y-8">
             <div class="text-center max-w-3xl mx-auto mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 mb-4">مخطط سير العمل (Block Diagram)</h2>
-                <p class="text-slate-600 leading-relaxed">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-i18n="wf_t1">مخطط سير العمل (Block Diagram)</h2>
+                <p class="text-slate-600 leading-relaxed" data-i18n="wf_d1">
                     يوضح هذا المخطط الهيكلي المراحل المتسلسلة والمتوازية لبناء الروبوت، بدءاً من تحديد المهام وصولاً إلى الاختبار النهائي للأنظمة المدمجة والميكانيكية.
                 </p>
             </div>
@@ -79,84 +86,84 @@
                     <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-indigo-50 border-indigo-200">
                         <i class="fa-solid fa-flag text-xl text-indigo-600"></i>
                         <div>
-                            <h4 class="font-bold text-slate-800">تحديد مهام الروبوت</h4>
-                            <p class="text-xs text-slate-500 mt-1 font-mono">Detect Robot Missions and Tasks</p>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_n1_t">تحديد مهام الروبوت</h4>
+                            <p class="text-xs text-slate-500 mt-1 font-mono">Detect Robot Missions</p>
                         </div>
                     </div>
-                    <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -left-1.5 text-slate-400 text-sm"></i></div>
+                    <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -start-1.5 text-slate-400 text-sm"></i></div>
                     
                     <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-indigo-50 border-indigo-200">
                         <i class="fa-solid fa-map text-xl text-indigo-600"></i>
                         <div>
-                            <h4 class="font-bold text-slate-800">تحديد بيئة العمل</h4>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_n2_t">تحديد بيئة العمل</h4>
                             <p class="text-xs text-slate-500 mt-1 font-mono">Detect Robot Working Area</p>
                         </div>
                     </div>
-                    <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -left-1.5 text-slate-400 text-sm"></i></div>
+                    <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -start-1.5 text-slate-400 text-sm"></i></div>
                 </div>
 
                 <!-- Phase 2: Parallel Tracks -->
                 <div class="grid md:grid-cols-2 gap-8 relative mb-8">
                     <!-- Mechanical Track -->
                     <div class="flex flex-col items-center bg-blue-50/50 p-6 rounded-2xl border border-blue-100 relative">
-                        <h3 class="font-bold text-blue-800 mb-6 w-full text-center border-b border-blue-200 pb-2">المسار الميكانيكي (Mechanical)</h3>
+                        <h3 class="font-bold text-blue-800 mb-6 w-full text-center border-b border-blue-200 pb-2" data-i18n="wf_mech_t">المسار الميكانيكي (Mechanical)</h3>
                         
                         <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-white border-blue-200">
-                            <h4 class="font-bold text-slate-800">التصميم على SolidWorks</h4>
-                            <p class="text-xs text-slate-500 mt-1 font-mono">Designing Robot on Solidworks</p>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_m1_t">التصميم على SolidWorks</h4>
+                            <p class="text-xs text-slate-500 mt-1 font-mono">Design on Solidworks</p>
                         </div>
-                        <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -left-1.5 text-slate-400 text-sm"></i></div>
+                        <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -start-1.5 text-slate-400 text-sm"></i></div>
                         
                         <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-white border-blue-200">
-                            <h4 class="font-bold text-slate-800">طباعة النموذج الأولي</h4>
-                            <p class="text-xs text-slate-500 mt-1 font-mono">Print First Prototyping (Demo)</p>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_m2_t">طباعة النموذج الأولي</h4>
+                            <p class="text-xs text-slate-500 mt-1 font-mono">Print First Prototype</p>
                         </div>
                         
                         <div class="flex flex-col items-center my-4 relative w-full">
-                            <i class="fa-solid fa-sync-alt text-xl text-blue-400 absolute -right-6 top-1/2 -translate-y-1/2"></i>
-                            <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -left-1.5 text-slate-400 text-sm"></i></div>
+                            <i class="fa-solid fa-sync-alt text-xl text-blue-400 absolute -end-6 top-1/2 -translate-y-1/2"></i>
+                            <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -start-1.5 text-slate-400 text-sm"></i></div>
                             <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-blue-100 border-blue-300">
-                                <h4 class="font-bold text-slate-800">إعادة التصميم والتعديل</h4>
-                                <p class="text-xs text-slate-500 mt-1 font-mono">Redesigning after testing & debugging</p>
+                                <h4 class="font-bold text-slate-800" data-i18n="wf_m3_t">إعادة التصميم والتعديل</h4>
+                                <p class="text-xs text-slate-500 mt-1 font-mono">Redesigning after testing</p>
                             </div>
-                            <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -left-1.5 text-slate-400 text-sm"></i></div>
+                            <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -start-1.5 text-slate-400 text-sm"></i></div>
                         </div>
 
                         <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-white border-blue-200">
-                            <h4 class="font-bold text-slate-800">طباعة الهيكل النهائي</h4>
-                            <p class="text-xs text-slate-500 mt-1 font-mono">Printing the Final Robot Assemblies</p>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_m4_t">طباعة الهيكل النهائي</h4>
+                            <p class="text-xs text-slate-500 mt-1 font-mono">Print Final Assembly</p>
                         </div>
                     </div>
 
                     <!-- Electronics Track -->
                     <div class="flex flex-col items-center bg-emerald-50/50 p-6 rounded-2xl border border-emerald-100 relative">
-                        <h3 class="font-bold text-emerald-800 mb-6 w-full text-center border-b border-emerald-200 pb-2">مسار المكونات (Components)</h3>
+                        <h3 class="font-bold text-emerald-800 mb-6 w-full text-center border-b border-emerald-200 pb-2" data-i18n="wf_elec_t">مسار المكونات (Components)</h3>
                         
                         <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-white border-emerald-200">
-                            <h4 class="font-bold text-slate-800">تحديد المكونات المطلوبة</h4>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_e1_t">تحديد المكونات المطلوبة</h4>
                             <p class="text-xs text-slate-500 mt-1 font-mono">Detecting Components</p>
                         </div>
-                        <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -left-1.5 text-slate-400 text-sm"></i></div>
+                        <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -start-1.5 text-slate-400 text-sm"></i></div>
                         
-                        <div class="w-full bg-emerald-100/50 p-4 rounded-xl border border-emerald-200 mb-4 text-center text-sm font-medium text-emerald-800">
+                        <div class="w-full bg-emerald-100/50 p-4 rounded-xl border border-emerald-200 mb-4 text-center text-sm font-medium text-emerald-800" data-i18n="wf_e2_t">
                             شراء المكونات (Purchasing)
                         </div>
                         
                         <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-white border-emerald-200">
-                            <h4 class="font-bold text-slate-800">اختبار المكونات</h4>
-                            <p class="text-xs text-slate-500 mt-1 font-mono">Test Components that works</p>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_e3_t">اختبار المكونات</h4>
+                            <p class="text-xs text-slate-500 mt-1 font-mono">Test Components</p>
                         </div>
                         
                         <div class="flex flex-col items-center w-full my-4 relative">
-                            <div class="absolute right-0 top-0 bottom-0 w-8 border-r-2 border-dashed border-red-300 rounded-r-xl flex items-center justify-end pr-2">
-                                <span class="text-xs font-bold text-red-500 bg-white px-1">No</span>
+                            <div class="absolute end-0 top-0 bottom-0 w-8 border-e-2 border-dashed border-red-300 rounded-e-xl flex items-center justify-center pe-2">
+                                <span class="text-xs font-bold text-red-500 bg-white px-1" data-i18n="word_no">No</span>
                             </div>
-                            <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -left-1.5 text-slate-400 text-sm"></i></div>
+                            <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -start-1.5 text-slate-400 text-sm"></i></div>
                             <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-red-50 border-red-200">
-                                <h4 class="font-bold text-slate-800">استبدال المكونات التالفة</h4>
-                                <p class="text-xs text-slate-500 mt-1 font-mono">Purchasing again a good one</p>
+                                <h4 class="font-bold text-slate-800" data-i18n="wf_e4_t">استبدال المكونات التالفة</h4>
+                                <p class="text-xs text-slate-500 mt-1 font-mono">Purchasing again</p>
                             </div>
-                            <span class="text-xs font-bold text-emerald-600 bg-white px-1 absolute left-1/2 -translate-x-1/2 -top-3">Yes</span>
+                            <span class="text-xs font-bold text-emerald-600 bg-white px-1 absolute start-1/2 -translate-x-1/2 -top-3" data-i18n="word_yes">Yes</span>
                         </div>
                     </div>
                 </div>
@@ -165,49 +172,49 @@
                 <div class="flex flex-col items-center">
                     <div class="flex gap-4 justify-center items-center w-full max-w-md opacity-50 mb-2">
                         <div class="w-1/2 h-px bg-slate-400"></div>
-                        <span class="text-xs font-bold">Next Step</span>
+                        <span class="text-xs font-bold whitespace-nowrap" data-i18n="wf_next">الخطوة التالية</span>
                         <div class="w-1/2 h-px bg-slate-400"></div>
                     </div>
                     
                     <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-amber-50 border-amber-200">
                         <i class="fa-solid fa-box-open text-xl text-amber-600"></i>
                         <div>
-                            <h4 class="font-bold text-slate-800">التجميع الكلي</h4>
-                            <p class="text-xs text-slate-500 mt-1 font-mono">Install Components and Assemblies together</p>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_a1_t">التجميع الكلي</h4>
+                            <p class="text-xs text-slate-500 mt-1 font-mono">Install Components & Assemblies</p>
                         </div>
                     </div>
-                    <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -left-1.5 text-slate-400 text-sm"></i></div>
+                    <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -start-1.5 text-slate-400 text-sm"></i></div>
                     
                     <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-indigo-50 border-indigo-200">
                         <i class="fa-solid fa-code text-xl text-indigo-600"></i>
                         <div>
-                            <h4 class="font-bold text-slate-800">برمجة الأنظمة</h4>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_a2_t">برمجة الأنظمة</h4>
                             <p class="text-xs text-slate-500 mt-1 font-mono">Program Software for GUI & MCU</p>
                         </div>
                     </div>
-                    <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -left-1.5 text-slate-400 text-sm"></i></div>
+                    <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -start-1.5 text-slate-400 text-sm"></i></div>
 
                     <div class="relative w-full flex flex-col items-center">
-                        <div class="absolute left-4 md:left-20 top-10 bottom-10 w-16 border-l-2 border-dashed border-red-300 rounded-l-xl flex items-center">
-                            <span class="text-xs font-bold text-red-500 bg-white px-1 -ml-3">No</span>
+                        <div class="absolute start-4 md:start-20 top-10 bottom-10 w-16 border-s-2 border-dashed border-red-300 rounded-s-xl flex items-center">
+                            <span class="text-xs font-bold text-red-500 bg-white px-1 -ms-3" data-i18n="word_no_2">No</span>
                         </div>
                         <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-slate-100 border-slate-300">
-                            <h4 class="font-bold text-slate-800">الاختبار الشامل للروبوت</h4>
-                            <p class="text-xs text-slate-500 mt-1 font-mono">Test and debug the Robot as whole</p>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_a3_t">الاختبار الشامل للروبوت</h4>
+                            <p class="text-xs text-slate-500 mt-1 font-mono">Test and debug the Robot</p>
                         </div>
-                        <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -left-1.5 text-slate-400 text-sm"></i></div>
+                        <div class="h-8 w-px bg-slate-300 relative my-1"><i class="fa-solid fa-arrow-down absolute -bottom-3 -start-1.5 text-slate-400 text-sm"></i></div>
                         
                         <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-red-50 border-red-200 my-4">
-                            <h4 class="font-bold text-slate-800">إعادة البرمجة</h4>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_a4_t">إعادة البرمجة</h4>
                             <p class="text-xs text-slate-500 mt-1 font-mono">Go to software programming again</p>
                         </div>
-                        <span class="text-xs font-bold text-emerald-600 bg-white px-1 mb-2">Yes</span>
+                        <span class="text-xs font-bold text-emerald-600 bg-white px-1 mb-2" data-i18n="word_yes_2">Yes</span>
                     </div>
                     
                     <div class="flex items-center gap-4 p-4 rounded-xl border-2 w-full max-w-sm text-center justify-center flex-col relative z-10 bg-emerald-100 border-emerald-400 shadow-md transform scale-105">
                         <i class="fa-solid fa-check-circle text-3xl text-emerald-600"></i>
                         <div>
-                            <h4 class="font-bold text-slate-800">الروبوت جاهز للعمل!</h4>
+                            <h4 class="font-bold text-slate-800" data-i18n="wf_ready_t">الروبوت جاهز للعمل!</h4>
                             <p class="text-xs text-slate-500 mt-1 font-mono">The Robot is Ready for work</p>
                         </div>
                     </div>
@@ -218,8 +225,8 @@
         <!-- Hardware Section -->
         <section id="section-hardware" class="tab-content fade-in-section space-y-8">
             <div class="text-center max-w-3xl mx-auto mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 mb-4">البنية التحتية للهاردوير</h2>
-                <p class="text-slate-600 leading-relaxed">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4" data-i18n="hw_t1">البنية التحتية للهاردوير</h2>
+                <p class="text-slate-600 leading-relaxed" data-i18n="hw_d1">
                     يعتمد الروبوت على متحكم دقيق <b>ESP32</b> كعقل مفكر، متصل بمشغلات مواتير عالية الطاقة <b>BTS7960</b> لتحمل تيارات المواتير، وحساس أشعة تحت الحمراء خماسي (5-Channel IR) لاستشعار الخط بدقة عالية.
                 </p>
             </div>
@@ -228,67 +235,67 @@
                 <!-- Cards -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-blue-500 hover:shadow-md transition-shadow">
                     <div class="mb-4"><i class="fa-solid fa-microchip text-3xl text-blue-500"></i></div>
-                    <h3 class="text-lg font-bold mb-2">متحكم ESP32</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">وحدة المعالجة المركزية، تدير إشارات الـ PWM، قراءة الحساسات، والاتصال بالبلوتوث.</p>
+                    <h3 class="text-lg font-bold mb-2" data-i18n="hw_c1_t">متحكم ESP32</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed" data-i18n="hw_c1_d">وحدة المعالجة المركزية، تدير إشارات الـ PWM، قراءة الحساسات، والاتصال بالبلوتوث.</p>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-amber-500 hover:shadow-md transition-shadow">
                     <div class="mb-4"><i class="fa-solid fa-bolt text-3xl text-amber-500"></i></div>
-                    <h3 class="text-lg font-bold mb-2">درايفر المواتير BTS7960</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">يوفر طاقة عالية (حتى 43 أمبير). نستخدم اثنين، واحد للجانب الأيمن وآخر للأيسر.</p>
+                    <h3 class="text-lg font-bold mb-2" data-i18n="hw_c2_t">درايفر المواتير BTS7960</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed" data-i18n="hw_c2_d">يوفر طاقة عالية (حتى 43 أمبير). نستخدم اثنين، واحد للجانب الأيمن وآخر للأيسر.</p>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-emerald-500 hover:shadow-md transition-shadow">
                     <div class="mb-4"><i class="fa-solid fa-wave-square text-3xl text-emerald-500"></i></div>
-                    <h3 class="text-lg font-bold mb-2">حساس الخط 5-Channel</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">خمسة حساسات رقمية تغطي مساحة واسعة لتوفير بيانات دقيقة لخوارزمية التحكم.</p>
+                    <h3 class="text-lg font-bold mb-2" data-i18n="hw_c3_t">حساس الخط 5-Channel</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed" data-i18n="hw_c3_d">خمسة حساسات رقمية تغطي مساحة واسعة لتوفير بيانات دقيقة لخوارزمية التحكم.</p>
                 </div>
             </div>
 
             <!-- Tables -->
             <div class="mt-12 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="bg-slate-100 p-4 border-b border-slate-200">
-                    <h3 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-cog"></i> جدول التوصيلات النهائية (Wiring)</h3>
+                    <h3 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-cog"></i> <span data-i18n="hw_tab_t">جدول التوصيلات النهائية (Wiring)</span></h3>
                 </div>
                 <div class="p-6 grid md:grid-cols-2 gap-8">
                     <div>
-                        <h4 class="font-bold text-indigo-700 mb-4">توصيلات الحساسات</h4>
-                        <table class="w-full text-right border-collapse">
+                        <h4 class="font-bold text-indigo-700 mb-4" data-i18n="hw_tab1_t">توصيلات الحساسات</h4>
+                        <table class="w-full text-start border-collapse">
                             <thead>
                                 <tr class="bg-indigo-50">
-                                    <th class="p-3 border-b-2 border-indigo-100">الحساس (Sensor Pin)</th>
-                                    <th class="p-3 border-b-2 border-indigo-100">منفذ ESP32</th>
+                                    <th class="p-3 border-b-2 border-indigo-100" data-i18n="hw_tab1_h1">الحساس (Sensor Pin)</th>
+                                    <th class="p-3 border-b-2 border-indigo-100" data-i18n="hw_tab1_h2">منفذ ESP32</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 font-medium">VCC</td><td class="p-3 text-slate-600 font-mono">3.3V</td></tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 font-medium">GND</td><td class="p-3 text-slate-600 font-mono">GND</td></tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 font-medium">OUT1 (أقصى اليسار)</td><td class="p-3 text-slate-600 font-mono">GPIO 32</td></tr>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 font-medium">OUT1 (<span data-i18n="hw_far_left">أقصى اليسار</span>)</td><td class="p-3 text-slate-600 font-mono">GPIO 32</td></tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 font-medium">OUT2</td><td class="p-3 text-slate-600 font-mono">GPIO 33</td></tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 font-medium">OUT3 (المنتصف)</td><td class="p-3 text-slate-600 font-mono">GPIO 34</td></tr>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 font-medium">OUT3 (<span data-i18n="hw_center">المنتصف</span>)</td><td class="p-3 text-slate-600 font-mono">GPIO 34</td></tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 font-medium">OUT4</td><td class="p-3 text-slate-600 font-mono">GPIO 35</td></tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 font-medium">OUT5 (أقصى اليمين)</td><td class="p-3 text-slate-600 font-mono">GPIO 39</td></tr>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 font-medium">OUT5 (<span data-i18n="hw_far_right">أقصى اليمين</span>)</td><td class="p-3 text-slate-600 font-mono">GPIO 39</td></tr>
                             </tbody>
                         </table>
                     </div>
                     <div>
-                        <h4 class="font-bold text-indigo-700 mb-4">توصيلات المواتير المعدلة</h4>
-                        <table class="w-full text-right border-collapse">
+                        <h4 class="font-bold text-indigo-700 mb-4" data-i18n="hw_tab2_t">توصيلات المواتير المعدلة</h4>
+                        <table class="w-full text-start border-collapse">
                             <thead>
                                 <tr class="bg-amber-50">
-                                    <th class="p-3 border-b-2 border-amber-100">وحدة BTS7960</th>
-                                    <th class="p-3 border-b-2 border-amber-100">منفذ ESP32 (للأمام)</th>
+                                    <th class="p-3 border-b-2 border-amber-100" data-i18n="hw_tab2_h1">وحدة BTS7960</th>
+                                    <th class="p-3 border-b-2 border-amber-100" data-i18n="hw_tab2_h2">منفذ ESP32 (للأمام)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-medium">المحرك الأيسر (L_PWM2)</td>
+                                    <td class="p-3 font-medium"><span data-i18n="hw_left_motor">المحرك الأيسر</span> (L_PWM2)</td>
                                     <td class="p-3 text-slate-600 font-mono">GPIO 26</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3 font-medium">المحرك الأيمن (L_PWM1)</td>
+                                    <td class="p-3 font-medium"><span data-i18n="hw_right_motor">المحرك الأيمن</span> (L_PWM1)</td>
                                     <td class="p-3 text-slate-600 font-mono">GPIO 14</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50 text-sm text-slate-500">
-                                    <td colspan="2" class="p-3 bg-red-50 text-red-700">ملاحظة: تم تجاهل منافذ GPIO 25 و 27 لاكتشاف تلف في أحد مسارات الدرايفر، والاعتماد على المسارات السليمة.</td>
+                                    <td colspan="2" class="p-3 bg-red-50 text-red-700" data-i18n="hw_note">ملاحظة: تم تجاهل منافذ GPIO 25 و 27 لاكتشاف تلف في أحد مسارات الدرايفر، والاعتماد على المسارات السليمة.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -303,38 +310,38 @@
                 <!-- State Machine -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                     <h3 class="text-xl font-bold mb-6 flex items-center gap-2 text-indigo-800">
-                        <i class="fa-solid fa-map"></i> دورة حياة الروبوت (FSM)
+                        <i class="fa-solid fa-map"></i> <span data-i18n="sw_fsm_t">دورة حياة الروبوت (FSM)</span>
                     </h3>
-                    <div class="space-y-4 relative before:absolute before:inset-y-0 before:right-6 before:w-0.5 before:bg-indigo-100">
+                    <div class="space-y-4 relative before:absolute before:inset-y-0 before:end-6 before:w-0.5 before:bg-indigo-100">
                         <!-- Step 1 -->
-                        <div class="relative pl-4 pr-14">
-                            <div class="absolute right-0 top-1 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">1</div>
-                            <h4 class="font-bold text-slate-800 text-lg pt-2">انتظار الأمر (WAITING_FOR_1)</h4>
-                            <p class="text-slate-500 text-sm mt-1">الروبوت متوقف تماماً، ينتظر إرسال رقم '1' عبر البلوتوث.</p>
+                        <div class="relative ps-4 pe-14">
+                            <div class="absolute end-0 top-1 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">1</div>
+                            <h4 class="font-bold text-slate-800 text-lg pt-2" data-i18n="sw_f1_t">انتظار الأمر (WAITING_FOR_1)</h4>
+                            <p class="text-slate-500 text-sm mt-1" data-i18n="sw_f1_d">الروبوت متوقف تماماً، ينتظر إرسال رقم '1' عبر البلوتوث.</p>
                         </div>
                         <!-- Step 2 -->
-                        <div class="relative pl-4 pr-14">
-                            <div class="absolute right-0 top-1 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">2</div>
-                            <h4 class="font-bold text-slate-800 text-lg pt-2">تتبع الخط - المرحلة الأولى</h4>
-                            <p class="text-slate-500 text-sm mt-1">يبدأ الحركة باتباع الخط باستخدام خوارزمية PD حتى تعثر الحساسات الخمسة على علامة التقاطع.</p>
+                        <div class="relative ps-4 pe-14">
+                            <div class="absolute end-0 top-1 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">2</div>
+                            <h4 class="font-bold text-slate-800 text-lg pt-2" data-i18n="sw_f2_t">تتبع الخط - المرحلة الأولى</h4>
+                            <p class="text-slate-500 text-sm mt-1" data-i18n="sw_f2_d">يبدأ الحركة باتباع الخط باستخدام خوارزمية PD حتى تعثر الحساسات الخمسة على علامة التقاطع.</p>
                         </div>
                         <!-- Step 3 -->
-                        <div class="relative pl-4 pr-14">
-                            <div class="absolute right-0 top-1 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">3</div>
-                            <h4 class="font-bold text-slate-800 text-lg pt-2">توقف مؤقت وإرسال إشارة</h4>
-                            <p class="text-slate-500 text-sm mt-1">يتوقف لمدة 3 ثوانٍ، يرسل '2' للهاتف، ويدخل في وضع انتظار الأمر '3'.</p>
+                        <div class="relative ps-4 pe-14">
+                            <div class="absolute end-0 top-1 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">3</div>
+                            <h4 class="font-bold text-slate-800 text-lg pt-2" data-i18n="sw_f3_t">توقف مؤقت وإرسال إشارة</h4>
+                            <p class="text-slate-500 text-sm mt-1" data-i18n="sw_f3_d">يتوقف لمدة 3 ثوانٍ، يرسل '2' للهاتف، ويدخل في وضع انتظار الأمر '3'.</p>
                         </div>
                         <!-- Step 4 -->
-                        <div class="relative pl-4 pr-14">
-                            <div class="absolute right-0 top-1 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">4</div>
-                            <h4 class="font-bold text-slate-800 text-lg pt-2">تتبع الخط - المرحلة الثانية</h4>
-                            <p class="text-slate-500 text-sm mt-1">عند استلام '3'، يكمل التتبع حتى يرى التقاطع مرة أخرى.</p>
+                        <div class="relative ps-4 pe-14">
+                            <div class="absolute end-0 top-1 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">4</div>
+                            <h4 class="font-bold text-slate-800 text-lg pt-2" data-i18n="sw_f4_t">تتبع الخط - المرحلة الثانية</h4>
+                            <p class="text-slate-500 text-sm mt-1" data-i18n="sw_f4_d">عند استلام '3'، يكمل التتبع حتى يرى التقاطع مرة أخرى.</p>
                         </div>
                         <!-- Step 5 -->
-                        <div class="relative pl-4 pr-14">
-                            <div class="absolute right-0 top-1 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">5</div>
-                            <h4 class="font-bold text-slate-800 text-lg pt-2">الإنهاء (العودة للبداية)</h4>
-                            <p class="text-slate-500 text-sm mt-1">يتوقف 3 ثوانٍ، يرسل '0' للهاتف، ويعود للحالة الأولى.</p>
+                        <div class="relative ps-4 pe-14">
+                            <div class="absolute end-0 top-1 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">5</div>
+                            <h4 class="font-bold text-slate-800 text-lg pt-2" data-i18n="sw_f5_t">الإنهاء (العودة للبداية)</h4>
+                            <p class="text-slate-500 text-sm mt-1" data-i18n="sw_f5_d">يتوقف 3 ثوانٍ، يرسل '0' للهاتف، ويعود للحالة الأولى.</p>
                         </div>
                     </div>
                 </div>
@@ -343,25 +350,25 @@
                 <div class="space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                         <h3 class="text-xl font-bold mb-4 flex items-center gap-2 text-emerald-700">
-                            <i class="fa-solid fa-wave-square"></i> خوارزمية التحكم (PD Control)
+                            <i class="fa-solid fa-wave-square"></i> <span data-i18n="sw_pd_t">خوارزمية التحكم (PD Control)</span>
                         </h3>
-                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed" data-i18n="sw_pd_d">
                             لجعل الروبوت يتحرك بنعومة دون اهتزازات (Zig-Zag)، نستخدم معادلة رياضية تعتمد على الخطأ الحالي والخطأ السابق:
                         </p>
-                        <div class="bg-slate-900 text-emerald-400 p-4 rounded-lg font-mono text-left text-sm dir-ltr">
+                        <div class="bg-slate-900 text-emerald-400 p-4 rounded-lg font-mono force-ltr text-sm">
                             <code>Correction = (KP * Error) + (KD * (Error - lastError))</code>
                         </div>
                         <ul class="mt-4 space-y-2 text-sm text-slate-700">
-                            <li><b class="text-emerald-600">KP (0.30):</b> يحدد قوة الدوران للعودة للخط.</li>
-                            <li><b class="text-emerald-600">KD (0.08):</b> يمتص الصدمات ويمنع الروبوت من تخطي الخط.</li>
+                            <li><b class="text-emerald-600">KP (0.30):</b> <span data-i18n="sw_pd_kp">يحدد قوة الدوران للعودة للخط.</span></li>
+                            <li><b class="text-emerald-600">KD (0.08):</b> <span data-i18n="sw_pd_kd">يمتص الصدمات ويمنع الروبوت من تخطي الخط.</span></li>
                         </ul>
                     </div>
 
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                         <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-blue-700">
-                            <i class="fa-solid fa-shield-alt"></i> معالجة التوقف (Stall Prevention)
+                            <i class="fa-solid fa-shield-alt"></i> <span data-i18n="sw_stall_t">معالجة التوقف (Stall Prevention)</span>
                         </h3>
-                        <p class="text-slate-600 text-sm leading-relaxed">
+                        <p class="text-slate-600 text-sm leading-relaxed" data-i18n="sw_stall_d">
                             محركات DC الثقيلة تصدر طنيناً وتتوقف إذا كانت إشارة الـ PWM ضعيفة جداً. تم تطبيق كود برمجي لمنع السرعة من الانخفاض عن `MIN_EFFECTIVE_PWM = 100` لضمان الحركة الدائمة.
                         </p>
                     </div>
@@ -375,8 +382,8 @@
                 <div class="bg-red-50 border-b border-red-100 p-6 flex gap-4 items-start">
                     <i class="fa-solid fa-wrench text-3xl text-red-500 mt-1"></i>
                     <div>
-                        <h3 class="text-2xl font-bold text-red-800 mb-2">توثيق المشكلة: عطل درايفر الموتور</h3>
-                        <p class="text-red-700/80 leading-relaxed">
+                        <h3 class="text-2xl font-bold text-red-800 mb-2" data-i18n="ts_t">توثيق المشكلة: عطل درايفر الموتور</h3>
+                        <p class="text-red-700/80 leading-relaxed" data-i18n="ts_d">
                             أثناء التجارب، لاحظنا أن المحرك الأيسر يعمل بشكل ممتاز عند إعطاء أمر الرجوع للخلف، ولكنه يتوقف تماماً عند إعطاء أمر التقدم للأمام، بالرغم من سلامة الكود.
                         </p>
                     </div>
@@ -385,23 +392,23 @@
                 <div class="p-6 space-y-4">
                     <!-- Accordion 1 -->
                     <div class="border border-slate-200 rounded-xl overflow-hidden">
-                        <button onclick="toggleAccordion('acc1')" class="w-full bg-slate-50 p-4 text-right flex justify-between items-center font-bold text-slate-800 hover:bg-slate-100 transition-colors">
-                            1. التشخيص (Diagnosis)
+                        <button onclick="toggleAccordion('acc1')" class="w-full bg-slate-50 p-4 text-start flex justify-between items-center font-bold text-slate-800 hover:bg-slate-100 transition-colors">
+                            <span data-i18n="ts_a1_t">1. التشخيص (Diagnosis)</span>
                             <i id="icon-acc1" class="fa-solid fa-chevron-down text-slate-500"></i>
                         </button>
                         <div id="content-acc1" class="hidden p-4 bg-white text-sm border-t border-slate-200">
-                            <p class="text-slate-600 leading-relaxed">عمل الموتور في اتجاه واحد يثبت أن الموتور نفسه سليم والبطارية توفر طاقة كافية. المشكلة انحصرت في مسار الإشارة (Forward Path) داخل دائرة جسر-H (H-Bridge) في شريحة BTS7960 المسؤولة عن الجانب الأيسر، أو في السلك الموصل بـ GPIO 27.</p>
+                            <p class="text-slate-600 leading-relaxed" data-i18n="ts_a1_d">عمل الموتور في اتجاه واحد يثبت أن الموتور نفسه سليم والبطارية توفر طاقة كافية. المشكلة انحصرت في مسار الإشارة (Forward Path) داخل دائرة جسر-H (H-Bridge) في شريحة BTS7960 المسؤولة عن الجانب الأيسر، أو في السلك الموصل بـ GPIO 27.</p>
                         </div>
                     </div>
                     
                     <!-- Accordion 2 -->
                     <div class="border border-slate-200 rounded-xl overflow-hidden">
-                        <button onclick="toggleAccordion('acc2')" class="w-full bg-slate-50 p-4 text-right flex justify-between items-center font-bold text-slate-800 hover:bg-slate-100 transition-colors">
-                            2. الحل البرمجي والهندسي (The Hack)
+                        <button onclick="toggleAccordion('acc2')" class="w-full bg-slate-50 p-4 text-start flex justify-between items-center font-bold text-slate-800 hover:bg-slate-100 transition-colors">
+                            <span data-i18n="ts_a2_t">2. الحل البرمجي والهندسي (The Hack)</span>
                             <i id="icon-acc2" class="fa-solid fa-chevron-down text-slate-500"></i>
                         </button>
                         <div id="content-acc2" class="hidden p-4 bg-white text-sm border-t border-slate-200">
-                            <p class="text-slate-600 leading-relaxed">
+                            <p class="text-slate-600 leading-relaxed" data-i18n="ts_a2_d">
                                 بما أن الروبوت مخصص لتتبع الخطوط (Line Follower) ولا يحتاج للرجوع للخلف أبداً، قمنا بخدعة هندسية:<br><br>
                                 <b>تم عكس الوظائف برمجياً:</b> استخدمنا الأقطاب السليمة التي كانت مخصصة للرجوع للخلف (Pins 14 & 26) وجعلناها هي المسؤولة عن التقدم للأمام، وتم تجاهل الأقطاب التالفة تماماً دون الحاجة لشراء درايفر جديد!
                             </p>
@@ -410,12 +417,12 @@
 
                     <!-- Accordion 3 -->
                     <div class="border border-slate-200 rounded-xl overflow-hidden">
-                        <button onclick="toggleAccordion('acc3')" class="w-full bg-slate-50 p-4 text-right flex justify-between items-center font-bold text-slate-800 hover:bg-slate-100 transition-colors">
-                            3. جهد التوقف (Stall Voltage)
+                        <button onclick="toggleAccordion('acc3')" class="w-full bg-slate-50 p-4 text-start flex justify-between items-center font-bold text-slate-800 hover:bg-slate-100 transition-colors">
+                            <span data-i18n="ts_a3_t">3. جهد التوقف (Stall Voltage)</span>
                             <i id="icon-acc3" class="fa-solid fa-chevron-down text-slate-500"></i>
                         </button>
                         <div id="content-acc3" class="hidden p-4 bg-white text-sm border-t border-slate-200">
-                            <p class="text-slate-600 leading-relaxed">
+                            <p class="text-slate-600 leading-relaxed" data-i18n="ts_a3_d">
                                 <b>المشكلة:</b> الروبوت كان يصدر صوتاً (أزيز) ولا يتحرك عند السرعات 1، 2، 3 عبر البلوتوث، وبدأ يتحرك بانتظام عند السرعة 4.<br>
                                 <b>التفسير:</b> الدرايفر والمحركات تتطلب طاقة أولية للتغلب على القصور الذاتي والوزن. السرعة 4 تعادل إشارة PWM بقيمة (113).<br>
                                 <b>الحل:</b> تم ضبط المتغير الأساسي <code>baseStraight = 115</code> وتم رفع حد الأمان البرمجي لمنع نزول الإشارة عن 100 لتجنب توقف المحرك المفاجئ.
@@ -435,38 +442,38 @@
                             <i class="fa-brands fa-bluetooth-b text-4xl"></i>
                         </div>
                     </div>
-                    <h3 class="text-2xl font-bold text-center mb-2">تطبيق الهاتف الذكي</h3>
+                    <h3 class="text-2xl font-bold text-center mb-2" data-i18n="bt_t">تطبيق الهاتف الذكي</h3>
                     <p class="text-center text-slate-600 mb-8">
-                        قم بالاتصال بالجهاز عبر البلوتوث باسم:<br>
-                        <code class="bg-slate-100 text-indigo-700 px-3 py-1 rounded-md font-mono mt-2 inline-block">ESP32_LineFollower</code>
+                        <span data-i18n="bt_d">قم بالاتصال بالجهاز عبر البلوتوث باسم:</span><br>
+                        <code class="bg-slate-100 text-indigo-700 px-3 py-1 rounded-md font-mono mt-2 inline-block force-ltr">ESP32_LineFollower</code>
                     </p>
 
                     <div class="space-y-4 text-sm">
-                        <h4 class="font-bold text-slate-800 border-b pb-2">أوامر الوضع الآلي (Auto Mode)</h4>
+                        <h4 class="font-bold text-slate-800 border-b pb-2" data-i18n="bt_auto_t">أوامر الوضع الآلي (Auto Mode)</h4>
                         <ul class="space-y-2">
                             <li class="flex justify-between border-b border-dashed border-slate-200 pb-2">
                                 <span class="font-mono bg-slate-100 px-2 rounded">1</span>
-                                <span>بدء التتبع (المرحلة الأولى)</span>
+                                <span data-i18n="bt_a1">بدء التتبع (المرحلة الأولى)</span>
                             </li>
                             <li class="flex justify-between border-b border-dashed border-slate-200 pb-2">
                                 <span class="font-mono bg-slate-100 px-2 rounded">3</span>
-                                <span>استكمال التتبع (المرحلة الثانية)</span>
+                                <span data-i18n="bt_a2">استكمال التتبع (المرحلة الثانية)</span>
                             </li>
                             <li class="flex justify-between text-red-600">
                                 <span class="font-mono bg-red-50 px-2 rounded">S</span>
-                                <span>توقف طوارئ (Emergency Stop)</span>
+                                <span data-i18n="bt_a3">توقف طوارئ (Emergency Stop)</span>
                             </li>
                         </ul>
 
-                        <h4 class="font-bold text-slate-800 border-b pb-2 mt-6">التبديل بين الأوضاع</h4>
+                        <h4 class="font-bold text-slate-800 border-b pb-2 mt-6" data-i18n="bt_man_t">التبديل بين الأوضاع</h4>
                         <ul class="space-y-2">
                             <li class="flex justify-between border-b border-dashed border-slate-200 pb-2">
                                 <span class="font-mono bg-blue-50 text-blue-700 px-2 rounded">n</span>
-                                <span>تفعيل التحكم اليدوي (Manual Override)</span>
+                                <span data-i18n="bt_m1">تفعيل التحكم اليدوي (Manual Override)</span>
                             </li>
                             <li class="flex justify-between">
                                 <span class="font-mono bg-indigo-50 text-indigo-700 px-2 rounded">N</span>
-                                <span>العودة للوضع الآلي وانتظار '1'</span>
+                                <span data-i18n="bt_m2">العودة للوضع الآلي وانتظار '1'</span>
                             </li>
                         </ul>
                     </div>
@@ -474,28 +481,26 @@
 
                 <div class="bg-slate-900 text-slate-300 p-8 rounded-2xl shadow-lg border border-slate-800">
                     <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                        <i class="fa-solid fa-code text-indigo-400"></i> كود التبديل بين الأوضاع
+                        <i class="fa-solid fa-code text-indigo-400"></i> <span data-i18n="bt_code_t">كود التبديل بين الأوضاع</span>
                     </h3>
-                    <pre class="font-mono text-xs md:text-sm overflow-x-auto text-left dir-ltr">
+                    <pre class="font-mono force-ltr text-xs md:text-sm overflow-x-auto">
 <code class="language-cpp">void handleBluetooth() {
   if (!SerialBT.available()) return;
   char c = SerialBT.read();
 
-  // التبديل للوضع اليدوي
+  // Switch to Manual Mode
   if (c == 'n') {
     currentState = MANUAL_CONTROL;
     stopRobot();
   } 
-  // العودة للوضع الآلي
+  // Return to Auto Mode
   else if (c == 'N') {
     currentState = WAITING_FOR_1;
     stopRobot();
   }
-
-  // .. باقي الأوامر بناءً على الحالة الحالية
 }</code>
                     </pre>
-                    <div class="mt-6 p-4 bg-indigo-950/50 rounded-lg border border-indigo-900 text-sm leading-relaxed">
+                    <div class="mt-6 p-4 bg-indigo-950/50 rounded-lg border border-indigo-900 text-sm leading-relaxed" data-i18n="bt_code_note">
                         <b class="text-indigo-300">ميزة هامة:</b> فصلنا منطق الـ FSM إلى نظامين متوازيين لمنع تعارض الأوامر. إذا كان الروبوت في الوضع اليدوي <code>MANUAL_CONTROL</code>، فإنه يتجاهل أمر '1' تماماً حتى ترسل له 'N' ليعود لبرنامجه الآلي.
                     </div>
                 </div>
@@ -506,35 +511,154 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 py-8 text-center mt-12">
-        <p>© 2026 تم تصميم هذا التوثيق التفاعلي لمشروع الأنظمة المدمجة.</p>
+        <p data-i18n="footer">© 2026 تم تصميم هذا التوثيق التفاعلي لمشروع الأنظمة المدمجة.</p>
     </footer>
 
-    <!-- JavaScript for Tabs and Accordions -->
+    <!-- JavaScript logic -->
     <script>
+        // --- Translation Dictionary ---
+        const i18n = {
+            "h_title": { ar: "توثيق الروبوت متتبع الخطوط", en: "Line Follower Robot Documentation" },
+            "h_subtitle": { ar: "نظام تحكم مدمج متقدم باستخدام ESP32", en: "Advanced Embedded Control System using ESP32" },
+            "nav_wf": { ar: "مخطط المشروع", en: "Project Workflow" },
+            "nav_hw": { ar: "الهاردوير", en: "Hardware" },
+            "nav_sw": { ar: "البرمجيات", en: "Software" },
+            "nav_ts": { ar: "التحديات والحلول", en: "Troubleshooting" },
+            "nav_bt": { ar: "التحكم والتشغيل", en: "Control & Operation" },
+            
+            // Workflow Section
+            "wf_t1": { ar: "مخطط سير العمل (Block Diagram)", en: "Workflow (Block Diagram)" },
+            "wf_d1": { ar: "يوضح هذا المخطط الهيكلي المراحل المتسلسلة والمتوازية لبناء الروبوت، بدءاً من تحديد المهام وصولاً إلى الاختبار النهائي للأنظمة المدمجة والميكانيكية.", en: "This structural diagram illustrates the sequential and parallel stages of building the robot, from defining tasks to final embedded system testing." },
+            "wf_n1_t": { ar: "تحديد مهام الروبوت", en: "Define Robot Missions" },
+            "wf_n2_t": { ar: "تحديد بيئة العمل", en: "Define Working Area" },
+            "wf_mech_t": { ar: "المسار الميكانيكي (Mechanical)", en: "Mechanical Track" },
+            "wf_m1_t": { ar: "التصميم على SolidWorks", en: "Design on SolidWorks" },
+            "wf_m2_t": { ar: "طباعة النموذج الأولي", en: "Print First Prototype" },
+            "wf_m3_t": { ar: "إعادة التصميم والتعديل", en: "Redesign & Modify" },
+            "wf_m4_t": { ar: "طباعة الهيكل النهائي", en: "Print Final Assembly" },
+            "wf_elec_t": { ar: "مسار المكونات (Components)", en: "Components Track" },
+            "wf_e1_t": { ar: "تحديد المكونات المطلوبة", en: "Identify Required Components" },
+            "wf_e2_t": { ar: "شراء المكونات (Purchasing)", en: "Purchasing Components" },
+            "wf_e3_t": { ar: "اختبار المكونات", en: "Test Components" },
+            "wf_e4_t": { ar: "استبدال المكونات التالفة", en: "Replace Faulty Components" },
+            "wf_next": { ar: "الخطوة التالية", en: "Next Step" },
+            "wf_a1_t": { ar: "التجميع الكلي", en: "Final Assembly" },
+            "wf_a2_t": { ar: "برمجة الأنظمة", en: "System Programming" },
+            "wf_a3_t": { ar: "الاختبار الشامل للروبوت", en: "Comprehensive Testing" },
+            "wf_a4_t": { ar: "إعادة البرمجة", en: "Reprogramming" },
+            "wf_ready_t": { ar: "الروبوت جاهز للعمل!", en: "Robot Ready for Work!" },
+            "word_yes": { ar: "نعم", en: "Yes" }, "word_no": { ar: "لا", en: "No" },
+            "word_yes_2": { ar: "نعم", en: "Yes" }, "word_no_2": { ar: "لا", en: "No" },
+            
+            // Hardware Section
+            "hw_t1": { ar: "البنية التحتية للهاردوير", en: "Hardware Infrastructure" },
+            "hw_d1": { ar: "يعتمد الروبوت على متحكم دقيق <b>ESP32</b> كعقل مفكر، متصل بمشغلات مواتير عالية الطاقة <b>BTS7960</b> لتحمل تيارات المواتير، وحساس أشعة تحت الحمراء خماسي (5-Channel IR) لاستشعار الخط بدقة عالية.", en: "The robot relies on an <b>ESP32</b> microcontroller as the brain, connected to high-power <b>BTS7960</b> motor drivers, and a 5-Channel IR sensor for high-precision line tracking." },
+            "hw_c1_t": { ar: "متحكم ESP32", en: "ESP32 Microcontroller" },
+            "hw_c1_d": { ar: "وحدة المعالجة المركزية، تدير إشارات الـ PWM، قراءة الحساسات، والاتصال بالبلوتوث.", en: "The CPU; manages PWM signals, sensor readings, and Bluetooth communication." },
+            "hw_c2_t": { ar: "درايفر المواتير BTS7960", en: "BTS7960 Motor Driver" },
+            "hw_c2_d": { ar: "يوفر طاقة عالية (حتى 43 أمبير). نستخدم اثنين، واحد للجانب الأيمن وآخر للأيسر.", en: "Provides high power (up to 43A). We use two units: one for the right side and one for the left." },
+            "hw_c3_t": { ar: "حساس الخط 5-Channel", en: "5-Channel Line Sensor" },
+            "hw_c3_d": { ar: "خمسة حساسات رقمية تغطي مساحة واسعة لتوفير بيانات دقيقة لخوارزمية التحكم.", en: "Five digital sensors covering a wide area to provide accurate data for the control algorithm." },
+            "hw_tab_t": { ar: "جدول التوصيلات النهائية (Wiring)", en: "Final Wiring Table" },
+            "hw_tab1_t": { ar: "توصيلات الحساسات", en: "Sensor Connections" },
+            "hw_tab1_h1": { ar: "الحساس (Sensor Pin)", en: "Sensor Pin" },
+            "hw_tab1_h2": { ar: "منفذ ESP32", en: "ESP32 Pin" },
+            "hw_far_left": { ar: "أقصى اليسار", en: "Far Left" },
+            "hw_center": { ar: "المنتصف", en: "Center" },
+            "hw_far_right": { ar: "أقصى اليمين", en: "Far Right" },
+            "hw_tab2_t": { ar: "توصيلات المواتير المعدلة", en: "Modified Motor Connections" },
+            "hw_tab2_h1": { ar: "وحدة BTS7960", en: "BTS7960 Unit" },
+            "hw_tab2_h2": { ar: "منفذ ESP32 (للأمام)", en: "ESP32 Pin (Forward)" },
+            "hw_left_motor": { ar: "المحرك الأيسر", en: "Left Motor" },
+            "hw_right_motor": { ar: "المحرك الأيمن", en: "Right Motor" },
+            "hw_note": { ar: "ملاحظة: تم تجاهل منافذ GPIO 25 و 27 لاكتشاف تلف في أحد مسارات الدرايفر، والاعتماد على المسارات السليمة.", en: "Note: GPIO 25 and 27 were ignored due to a faulty driver path; relying entirely on the healthy paths." },
+            
+            // Software Section
+            "sw_fsm_t": { ar: "دورة حياة الروبوت (FSM)", en: "Robot Life Cycle (FSM)" },
+            "sw_f1_t": { ar: "انتظار الأمر (WAITING_FOR_1)", en: "Awaiting Command (WAITING_FOR_1)" },
+            "sw_f1_d": { ar: "الروبوت متوقف تماماً، ينتظر إرسال رقم '1' عبر البلوتوث.", en: "Robot is fully stopped, waiting for '1' via Bluetooth." },
+            "sw_f2_t": { ar: "تتبع الخط - المرحلة الأولى", en: "Line Following - Phase 1" },
+            "sw_f2_d": { ar: "يبدأ الحركة باتباع الخط باستخدام خوارزمية PD حتى تعثر الحساسات الخمسة على علامة التقاطع.", en: "Starts following the line using the PD algorithm until all 5 sensors detect the intersection mark." },
+            "sw_f3_t": { ar: "توقف مؤقت وإرسال إشارة", en: "Pause and Send Signal" },
+            "sw_f3_d": { ar: "يتوقف لمدة 3 ثوانٍ، يرسل '2' للهاتف، ويدخل في وضع انتظار الأمر '3'.", en: "Stops for 3 seconds, sends '2' to the phone, and waits for command '3'." },
+            "sw_f4_t": { ar: "تتبع الخط - المرحلة الثانية", en: "Line Following - Phase 2" },
+            "sw_f4_d": { ar: "عند استلام '3'، يكمل التتبع حتى يرى التقاطع مرة أخرى.", en: "Upon receiving '3', continues tracking until the intersection is detected again." },
+            "sw_f5_t": { ar: "الإنهاء (العودة للبداية)", en: "Finish (Return to Start)" },
+            "sw_f5_d": { ar: "يتوقف 3 ثوانٍ، يرسل '0' للهاتف، ويعود للحالة الأولى.", en: "Stops for 3 seconds, sends '0' to the phone, and returns to the initial state." },
+            "sw_pd_t": { ar: "خوارزمية التحكم (PD Control)", en: "Control Algorithm (PD Control)" },
+            "sw_pd_d": { ar: "لجعل الروبوت يتحرك بنعومة دون اهتزازات (Zig-Zag)، نستخدم معادلة رياضية تعتمد على الخطأ الحالي والخطأ السابق:", en: "To make the robot move smoothly without wobbling (Zig-Zag), we use a mathematical equation based on current and previous errors:" },
+            "sw_pd_kp": { ar: "يحدد قوة الدوران للعودة للخط.", en: "Determines the turning strength to return to the line." },
+            "sw_pd_kd": { ar: "يمتص الصدمات ويمنع الروبوت من تخطي الخط.", en: "Absorbs momentum and prevents the robot from overshooting the line." },
+            "sw_stall_t": { ar: "معالجة التوقف (Stall Prevention)", en: "Stall Prevention" },
+            "sw_stall_d": { ar: "محركات DC الثقيلة تصدر طنيناً وتتوقف إذا كانت إشارة الـ PWM ضعيفة جداً. تم تطبيق كود برمجي لمنع السرعة من الانخفاض عن MIN_EFFECTIVE_PWM = 100 لضمان الحركة الدائمة.", en: "Heavy DC motors hum and stall if the PWM signal is too low. A software limit prevents the speed from dropping below MIN_EFFECTIVE_PWM = 100 to ensure continuous movement." },
+            
+            // Troubleshooting Section
+            "ts_t": { ar: "توثيق المشكلة: عطل درايفر الموتور", en: "Problem Log: Motor Driver Failure" },
+            "ts_d": { ar: "أثناء التجارب، لاحظنا أن المحرك الأيسر يعمل بشكل ممتاز عند إعطاء أمر الرجوع للخلف، ولكنه يتوقف تماماً عند إعطاء أمر التقدم للأمام، بالرغم من سلامة الكود.", en: "During testing, the left motor worked perfectly in reverse, but completely stopped when commanded to move forward, despite the code being correct." },
+            "ts_a1_t": { ar: "1. التشخيص (Diagnosis)", en: "1. Diagnosis" },
+            "ts_a1_d": { ar: "عمل الموتور في اتجاه واحد يثبت أن الموتور نفسه سليم والبطارية توفر طاقة كافية. المشكلة انحصرت في مسار الإشارة (Forward Path) داخل دائرة جسر-H (H-Bridge) في شريحة BTS7960 المسؤولة عن الجانب الأيسر، أو في السلك الموصل بـ GPIO 27.", en: "The motor working in one direction proves the motor and battery are fine. The issue is isolated to the Forward Path inside the H-Bridge of the left BTS7960 chip, or the wire connected to GPIO 27." },
+            "ts_a2_t": { ar: "2. الحل البرمجي والهندسي (The Hack)", en: "2. Software/Hardware Hack" },
+            "ts_a2_d": { ar: "بما أن الروبوت مخصص لتتبع الخطوط (Line Follower) ولا يحتاج للرجوع للخلف أبداً، قمنا بخدعة هندسية:<br><br><b>تم عكس الوظائف برمجياً:</b> استخدمنا الأقطاب السليمة التي كانت مخصصة للرجوع للخلف (Pins 14 & 26) وجعلناها هي المسؤولة عن التقدم للأمام، وتم تجاهل الأقطاب التالفة تماماً دون الحاجة لشراء درايفر جديد!", en: "Since a line follower never needs to reverse, we applied a hardware hack:<br><br><b>Functions were reversed in software:</b> We used the healthy reverse pins (14 & 26) to drive forward, completely ignoring the faulty pins without buying a new driver!" },
+            "ts_a3_t": { ar: "3. جهد التوقف (Stall Voltage)", en: "3. Stall Voltage" },
+            "ts_a3_d": { ar: "<b>المشكلة:</b> الروبوت كان يصدر صوتاً (أزيز) ولا يتحرك عند السرعات 1، 2، 3 عبر البلوتوث، وبدأ يتحرك بانتظام عند السرعة 4.<br><b>التفسير:</b> الدرايفر والمحركات تتطلب طاقة أولية للتغلب على القصور الذاتي والوزن. السرعة 4 تعادل إشارة PWM بقيمة (113).<br><b>الحل:</b> تم ضبط المتغير الأساسي <code>baseStraight = 115</code> وتم رفع حد الأمان البرمجي لمنع نزول الإشارة عن 100 لتجنب توقف المحرك المفاجئ.", en: "<b>Problem:</b> The robot hummed and didn't move at Bluetooth speeds 1, 2, 3, but moved steadily at speed 4.<br><b>Explanation:</b> Motors require initial power to overcome inertia and weight. Speed 4 equals a PWM of (113).<br><b>Solution:</b> The base variable was set to <code>baseStraight = 115</code>, and the safety limit was raised to prevent signals dropping below 100, avoiding stalls." },
+            
+            // Bluetooth Section
+            "bt_t": { ar: "تطبيق الهاتف الذكي", en: "Smartphone App" },
+            "bt_d": { ar: "قم بالاتصال بالجهاز عبر البلوتوث باسم:", en: "Connect to the device via Bluetooth named:" },
+            "bt_auto_t": { ar: "أوامر الوضع الآلي (Auto Mode)", en: "Auto Mode Commands" },
+            "bt_a1": { ar: "بدء التتبع (المرحلة الأولى)", en: "Start tracking (Phase 1)" },
+            "bt_a2": { ar: "استكمال التتبع (المرحلة الثانية)", en: "Resume tracking (Phase 2)" },
+            "bt_a3": { ar: "توقف طوارئ (Emergency Stop)", en: "Emergency Stop" },
+            "bt_man_t": { ar: "التبديل بين الأوضاع", en: "Switching Modes" },
+            "bt_m1": { ar: "تفعيل التحكم اليدوي (Manual Override)", en: "Activate Manual Override" },
+            "bt_m2": { ar: "العودة للوضع الآلي وانتظار '1'", en: "Return to Auto Mode & wait for '1'" },
+            "bt_code_t": { ar: "كود التبديل بين الأوضاع", en: "Mode Switching Code" },
+            "bt_code_note": { ar: "<b class='text-indigo-300'>ميزة هامة:</b> فصلنا منطق الـ FSM إلى نظامين متوازيين لمنع تعارض الأوامر. إذا كان الروبوت في الوضع اليدوي <code>MANUAL_CONTROL</code>، فإنه يتجاهل أمر '1' تماماً حتى ترسل له 'N' ليعود لبرنامجه الآلي.", en: "<b class='text-indigo-300'>Key Feature:</b> The FSM logic is split into parallel systems to prevent command conflicts. If in <code>MANUAL_CONTROL</code>, it ignores '1' completely until 'N' is sent to restore the auto program." },
+            "footer": { ar: "© 2026 تم تصميم هذا التوثيق التفاعلي لمشروع الأنظمة المدمجة.", en: "© 2026 Interactive Documentation for Embedded Systems Project." }
+        };
+
+        let currentLang = 'ar';
+
+        function toggleLang() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            
+            // 1. Update document attributes for direction
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            
+            // 2. Update toggle button text
+            document.getElementById('lang-text').innerText = currentLang === 'ar' ? 'English' : 'العربية';
+            
+            // 3. Update all translated elements
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[key] && i18n[key][currentLang]) {
+                    el.innerHTML = i18n[key][currentLang];
+                }
+            });
+        }
+
+        // --- Tab Logic ---
         function switchTab(tabId) {
-            // Hide all sections
             document.querySelectorAll('.tab-content').forEach(el => {
                 el.classList.add('hidden');
-                // Remove animation class to reset it
                 el.classList.remove('fade-in-section');
             });
             
-            // Reset all buttons to default state
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.className = "nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-800/50 text-indigo-100 hover:bg-indigo-700 hover:text-white";
             });
             
-            // Show the target section and add animation
             const targetSection = document.getElementById('section-' + tabId);
             targetSection.classList.remove('hidden');
-            // Slight delay to allow display:block to apply before animating
             setTimeout(() => targetSection.classList.add('fade-in-section'), 10);
             
-            // Set active styles on the clicked button
             const activeBtn = document.getElementById('btn-' + tabId);
             activeBtn.className = "nav-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium whitespace-nowrap bg-indigo-500 text-white shadow-md";
         }
 
+        // --- Accordion Logic ---
         function toggleAccordion(id) {
             const content = document.getElementById('content-' + id);
             const icon = document.getElementById('icon-' + id);
@@ -550,7 +674,7 @@
             }
         }
         
-        // Initialize default tab (Hardware)
+        // Initialize default tab
         document.addEventListener('DOMContentLoaded', () => {
             switchTab('hardware');
         });

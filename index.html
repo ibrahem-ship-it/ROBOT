@@ -1,0 +1,371 @@
+import React, { useState } from 'react';
+import { Cpu, Activity, Bluetooth, Wrench, Code, Settings, ChevronDown, ChevronUp, Zap, Server, ShieldCheck, Map } from 'lucide-react';
+
+const App = () => {
+  const [activeTab, setActiveTab] = useState('hardware');
+
+  return (
+    <div dir="rtl" className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-indigo-200">
+      {/* Header */}
+      <header className="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-3">
+              <Cpu className="w-10 h-10 text-indigo-400" />
+              <div>
+                <h1 className="text-2xl font-bold">توثيق الروبوت متتبع الخطوط</h1>
+                <p className="text-indigo-200 text-sm">نظام تحكم مدمج متقدم باستخدام ESP32</p>
+              </div>
+            </div>
+            
+            {/* Navigation Tabs */}
+            <nav className="flex flex-wrap justify-center gap-2">
+              <NavButton active={activeTab === 'hardware'} onClick={() => setActiveTab('hardware')} icon={<Server size={18}/>} label="الهاردوير" />
+              <NavButton active={activeTab === 'software'} onClick={() => setActiveTab('software')} icon={<Code size={18}/>} label="البرمجيات" />
+              <NavButton active={activeTab === 'troubleshooting'} onClick={() => setActiveTab('troubleshooting')} icon={<Wrench size={18}/>} label="التحديات والحلول" />
+              <NavButton active={activeTab === 'bluetooth'} onClick={() => setActiveTab('bluetooth')} icon={<Bluetooth size={18}/>} label="التحكم والتشغيل" />
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        {activeTab === 'hardware' && <HardwareSection />}
+        {activeTab === 'software' && <SoftwareSection />}
+        {activeTab === 'troubleshooting' && <TroubleshootingSection />}
+        {activeTab === 'bluetooth' && <BluetoothSection />}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-slate-900 text-slate-400 py-8 text-center">
+        <p>© 2026 تم تصميم هذا التوثيق التفاعلي لمشروع الأنظمة المدمجة.</p>
+      </footer>
+    </div>
+  );
+};
+
+// --- Components ---
+
+const NavButton = ({ active, onClick, icon, label }) => (
+  <button
+    onClick={onClick}
+    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 font-medium ${
+      active 
+        ? 'bg-indigo-500 text-white shadow-md' 
+        : 'bg-indigo-800/50 text-indigo-100 hover:bg-indigo-700 hover:text-white'
+    }`}
+  >
+    {icon}
+    <span>{label}</span>
+  </button>
+);
+
+// 1. Hardware Section
+const HardwareSection = () => {
+  return (
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="text-center max-w-3xl mx-auto mb-10">
+        <h2 className="text-3xl font-bold text-slate-800 mb-4">البنية التحتية للهاردوير</h2>
+        <p className="text-slate-600 leading-relaxed">
+          يعتمد الروبوت على متحكم دقيق <b>ESP32</b> كعقل مفكر، متصل بمشغلات مواتير عالية الطاقة <b>BTS7960</b> لتحمل تيارات المواتير، وحساس أشعة تحت الحمراء خماسي (5-Channel IR) لاستشعار الخط بدقة عالية.
+        </p>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-6">
+        <HardwareCard 
+          title="متحكم ESP32" 
+          icon={<Cpu className="w-8 h-8 text-blue-500"/>}
+          desc="وحدة المعالجة المركزية، تدير إشارات الـ PWM، قراءة الحساسات، والاتصال بالبلوتوث."
+          color="border-blue-500"
+        />
+        <HardwareCard 
+          title="درايفر المواتير BTS7960" 
+          icon={<Zap className="w-8 h-8 text-amber-500"/>}
+          desc="يوفر طاقة عالية (حتى 43 أمبير). نستخدم اثنين، واحد للجانب الأيمن وآخر للأيسر."
+          color="border-amber-500"
+        />
+        <HardwareCard 
+          title="حساس الخط 5-Channel" 
+          icon={<Activity className="w-8 h-8 text-emerald-500"/>}
+          desc="خمسة حساسات رقمية تغطي مساحة واسعة لتوفير بيانات دقيقة لخوارزمية التحكم."
+          color="border-emerald-500"
+        />
+      </div>
+
+      {/* Wiring Tables */}
+      <div className="mt-12 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-slate-100 p-4 border-b border-slate-200">
+          <h3 className="text-xl font-bold flex items-center gap-2"><Settings className="w-5 h-5"/> جدول التوصيلات النهائية (Wiring)</h3>
+        </div>
+        <div className="p-6 grid md:grid-cols-2 gap-8">
+          <div>
+            <h4 className="font-bold text-indigo-700 mb-4">توصيلات الحساسات</h4>
+            <table className="w-full text-right border-collapse">
+              <thead>
+                <tr className="bg-indigo-50">
+                  <th className="p-3 border-b-2 border-indigo-100">الحساس (Sensor Pin)</th>
+                  <th className="p-3 border-b-2 border-indigo-100">منفذ ESP32</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { pin: 'VCC', esp: '3.3V' },
+                  { pin: 'GND', esp: 'GND' },
+                  { pin: 'OUT1 (أقصى اليسار)', esp: 'GPIO 32' },
+                  { pin: 'OUT2', esp: 'GPIO 33' },
+                  { pin: 'OUT3 (المنتصف)', esp: 'GPIO 34' },
+                  { pin: 'OUT4', esp: 'GPIO 35' },
+                  { pin: 'OUT5 (أقصى اليمين)', esp: 'GPIO 39' },
+                ].map((row, i) => (
+                  <tr key={i} className="border-b border-slate-100 hover:bg-slate-50">
+                    <td className="p-3 font-medium">{row.pin}</td>
+                    <td className="p-3 text-slate-600 font-mono">{row.esp}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-indigo-700 mb-4">توصيلات المواتير المعدلة</h4>
+            <table className="w-full text-right border-collapse">
+              <thead>
+                <tr className="bg-amber-50">
+                  <th className="p-3 border-b-2 border-amber-100">وحدة BTS7960</th>
+                  <th className="p-3 border-b-2 border-amber-100">منفذ ESP32 (للأمام)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-slate-100 hover:bg-slate-50">
+                  <td className="p-3 font-medium">المحرك الأيسر (L_PWM2)</td>
+                  <td className="p-3 text-slate-600 font-mono">GPIO 26</td>
+                </tr>
+                <tr className="border-b border-slate-100 hover:bg-slate-50">
+                  <td className="p-3 font-medium">المحرك الأيمن (L_PWM1)</td>
+                  <td className="p-3 text-slate-600 font-mono">GPIO 14</td>
+                </tr>
+                <tr className="border-b border-slate-100 hover:bg-slate-50 text-sm text-slate-500">
+                  <td colSpan="2" className="p-3 bg-red-50 text-red-700">ملاحظة: تم تجاهل منافذ GPIO 25 و 27 لاكتشاف تلف في أحد مسارات الدرايفر، والاعتماد على المسارات السليمة.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const HardwareCard = ({ title, icon, desc, color }) => (
+  <div className={`bg-white p-6 rounded-2xl shadow-sm border-t-4 ${color} hover:shadow-md transition-shadow`}>
+    <div className="mb-4">{icon}</div>
+    <h3 className="text-lg font-bold mb-2">{title}</h3>
+    <p className="text-slate-600 text-sm leading-relaxed">{desc}</p>
+  </div>
+);
+
+// 2. Software Section
+const SoftwareSection = () => {
+  return (
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="grid md:grid-cols-2 gap-8">
+        
+        {/* State Machine */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+          <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-indigo-800">
+            <Map className="w-6 h-6"/> دورة حياة الروبوت (FSM)
+          </h3>
+          <div className="space-y-4 relative before:absolute before:inset-y-0 before:right-6 before:w-0.5 before:bg-indigo-100">
+            <FsmStep num="1" title="انتظار الأمر (WAITING_FOR_1)" desc="الروبوت متوقف تماماً، ينتظر إرسال رقم '1' عبر البلوتوث." />
+            <FsmStep num="2" title="تتبع الخط - المرحلة الأولى" desc="يبدأ الحركة باتباع الخط باستخدام خوارزمية PD حتى تعثر الحساسات الخمسة على علامة التقاطع." />
+            <FsmStep num="3" title="توقف مؤقت وإرسال إشارة" desc="يتوقف لمدة 3 ثوانٍ، يرسل '2' للهاتف، ويدخل في وضع انتظار الأمر '3'." />
+            <FsmStep num="4" title="تتبع الخط - المرحلة الثانية" desc="عند استلام '3'، يكمل التتبع حتى يرى التقاطع مرة أخرى." />
+            <FsmStep num="5" title="الإنهاء (العودة للبداية)" desc="يتوقف 3 ثوانٍ، يرسل '0' للهاتف، ويعود للحالة الأولى." />
+          </div>
+        </div>
+
+        {/* Control Logic */}
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-emerald-700">
+              <Activity className="w-6 h-6"/> خوارزمية التحكم (PD Control)
+            </h3>
+            <p className="text-slate-600 text-sm mb-4 leading-relaxed">
+              لجعل الروبوت يتحرك بنعومة دون اهتزازات (Zig-Zag)، نستخدم معادلة رياضية تعتمد على الخطأ الحالي والخطأ السابق:
+            </p>
+            <div className="bg-slate-900 text-emerald-400 p-4 rounded-lg font-mono text-left text-sm dir-ltr">
+              <code>Correction = (KP * Error) + (KD * (Error - lastError))</code>
+            </div>
+            <ul className="mt-4 space-y-2 text-sm text-slate-700">
+              <li><b className="text-emerald-600">KP (0.30):</b> يحدد قوة الدوران للعودة للخط.</li>
+              <li><b className="text-emerald-600">KD (0.08):</b> يمتص الصدمات ويمنع الروبوت من تخطي الخط.</li>
+            </ul>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+             <h3 className="text-xl font-bold mb-2 flex items-center gap-2 text-blue-700">
+              <ShieldCheck className="w-6 h-6"/> معالجة التوقف (Stall Prevention)
+            </h3>
+            <p className="text-slate-600 text-sm leading-relaxed">
+              محركات DC الثقيلة تصدر طنيناً وتتوقف إذا كانت إشارة الـ PWM ضعيفة جداً. تم تطبيق كود برمجي لمنع السرعة من الانخفاض عن `MIN_EFFECTIVE_PWM = 100` لضمان الحركة الدائمة.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FsmStep = ({ num, title, desc }) => (
+  <div className="relative pl-4 pr-14">
+    <div className="absolute right-0 top-1 w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">
+      {num}
+    </div>
+    <h4 className="font-bold text-slate-800 text-lg pt-2">{title}</h4>
+    <p className="text-slate-500 text-sm mt-1">{desc}</p>
+  </div>
+);
+
+// 3. Troubleshooting Section
+const TroubleshootingSection = () => {
+  return (
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-red-50 border-b border-red-100 p-6 flex gap-4 items-start">
+          <Wrench className="w-8 h-8 text-red-500 shrink-0 mt-1" />
+          <div>
+            <h3 className="text-2xl font-bold text-red-800 mb-2">توثيق المشكلة: عطل درايفر الموتور</h3>
+            <p className="text-red-700/80 leading-relaxed">
+              أثناء التجارب، لاحظنا أن المحرك الأيسر يعمل بشكل ممتاز عند إعطاء أمر الرجوع للخلف، ولكنه يتوقف تماماً عند إعطاء أمر التقدم للأمام، بالرغم من سلامة الكود.
+            </p>
+          </div>
+        </div>
+        
+        <div className="p-6 space-y-6">
+          <Accordion title="1. التشخيص (Diagnosis)">
+            <p className="text-slate-600 leading-relaxed">
+              عمل الموتور في اتجاه واحد يثبت أن الموتور نفسه سليم والبطارية توفر طاقة كافية. المشكلة انحصرت في مسار الإشارة (Forward Path) داخل دائرة جسر-H (H-Bridge) في شريحة BTS7960 المسؤولة عن الجانب الأيسر، أو في السلك الموصل بـ GPIO 27.
+            </p>
+          </Accordion>
+          
+          <Accordion title="2. الحل البرمجي والهندسي (The Hack)">
+            <p className="text-slate-600 leading-relaxed">
+              بما أن الروبوت مخصص لتتبع الخطوط (Line Follower) ولا يحتاج للرجوع للخلف أبداً، قمنا بخدعة هندسية:<br/><br/>
+              <b>تم عكس الوظائف برمجياً:</b> استخدمنا الأقطاب السليمة التي كانت مخصصة للرجوع للخلف (Pins 14 & 26) وجعلناها هي المسؤولة عن التقدم للأمام، وتم تجاهل الأقطاب التالفة تماماً دون الحاجة لشراء درايفر جديد!
+            </p>
+          </Accordion>
+
+          <Accordion title="3. جهد التوقف (Stall Voltage)">
+            <p className="text-slate-600 leading-relaxed">
+              <b>المشكلة:</b> الروبوت كان يصدر صوتاً (أزيز) ولا يتحرك عند السرعات 1، 2، 3 عبر البلوتوث، وبدأ يتحرك بانتظام عند السرعة 4.<br/>
+              <b>التفسير:</b> الدرايفر والمحركات تتطلب طاقة أولية للتغلب على القصور الذاتي والوزن. السرعة 4 تعادل إشارة PWM بقيمة (113).<br/>
+              <b>الحل:</b> تم ضبط المتغير الأساسي <code>baseStraight = 115</code> وتم رفع حد الأمان البرمجي لمنع نزول الإشارة عن 100 لتجنب توقف المحرك المفاجئ.
+            </p>
+          </Accordion>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Accordion = ({ title, children }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="border border-slate-200 rounded-xl overflow-hidden">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full bg-slate-50 p-4 text-right flex justify-between items-center font-bold text-slate-800 hover:bg-slate-100 transition-colors"
+      >
+        {title}
+        {isOpen ? <ChevronUp className="w-5 h-5 text-slate-500" /> : <ChevronDown className="w-5 h-5 text-slate-500" />}
+      </button>
+      {isOpen && <div className="p-4 bg-white text-sm border-t border-slate-200">{children}</div>}
+    </div>
+  );
+};
+
+// 4. Bluetooth Section
+const BluetoothSection = () => {
+  return (
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      <div className="grid md:grid-cols-2 gap-8 items-start">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+          <div className="flex justify-center mb-6">
+            <div className="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+              <Bluetooth className="w-10 h-10" />
+            </div>
+          </div>
+          <h3 className="text-2xl font-bold text-center mb-2">تطبيق الهاتف الذكي</h3>
+          <p className="text-center text-slate-600 mb-8">
+            قم بالاتصال بالجهاز عبر البلوتوث باسم:<br/>
+            <code className="bg-slate-100 text-indigo-700 px-3 py-1 rounded-md font-mono mt-2 inline-block">ESP32_LineFollower</code>
+          </p>
+
+          <div className="space-y-4 text-sm">
+            <h4 className="font-bold text-slate-800 border-b pb-2">أوامر الوضع الآلي (Auto Mode)</h4>
+            <ul className="space-y-2">
+              <li className="flex justify-between border-b border-dashed border-slate-200 pb-2">
+                <span className="font-mono bg-slate-100 px-2 rounded">1</span>
+                <span>بدء التتبع (المرحلة الأولى)</span>
+              </li>
+              <li className="flex justify-between border-b border-dashed border-slate-200 pb-2">
+                <span className="font-mono bg-slate-100 px-2 rounded">3</span>
+                <span>استكمال التتبع (المرحلة الثانية)</span>
+              </li>
+              <li className="flex justify-between text-red-600">
+                <span className="font-mono bg-red-50 px-2 rounded">S</span>
+                <span>توقف طوارئ (Emergency Stop)</span>
+              </li>
+            </ul>
+
+            <h4 className="font-bold text-slate-800 border-b pb-2 mt-6">التبديل بين الأوضاع</h4>
+            <ul className="space-y-2">
+              <li className="flex justify-between border-b border-dashed border-slate-200 pb-2">
+                <span className="font-mono bg-blue-50 text-blue-700 px-2 rounded">n</span>
+                <span>تفعيل التحكم اليدوي (Manual Override)</span>
+              </li>
+              <li className="flex justify-between">
+                <span className="font-mono bg-indigo-50 text-indigo-700 px-2 rounded">N</span>
+                <span>العودة للوضع الآلي وانتظار '1'</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="bg-slate-900 text-slate-300 p-8 rounded-2xl shadow-lg border border-slate-800">
+          <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+            <Code className="w-6 h-6 text-indigo-400"/> كود التبديل بين الأوضاع
+          </h3>
+          <pre className="font-mono text-xs md:text-sm overflow-x-auto text-left dir-ltr">
+<code className="language-cpp">
+{`void handleBluetooth() {
+  if (!SerialBT.available()) return;
+  char c = SerialBT.read();
+
+  // التبديل للوضع اليدوي
+  if (c == 'n') {
+    currentState = MANUAL_CONTROL;
+    stopRobot();
+  } 
+  // العودة للوضع الآلي
+  else if (c == 'N') {
+    currentState = WAITING_FOR_1;
+    stopRobot();
+  }
+
+  // .. باقي الأوامر بناءً على الحالة الحالية
+}`}
+</code>
+          </pre>
+          <div className="mt-6 p-4 bg-indigo-950/50 rounded-lg border border-indigo-900 text-sm leading-relaxed">
+            <b className="text-indigo-300">ميزة هامة:</b> فصلنا منطق الـ FSM إلى نظامين متوازيين لمنع تعارض الأوامر. إذا كان الروبوت في الوضع اليدوي <code>MANUAL_CONTROL</code>، فإنه يتجاهل أمر '1' تماماً حتى ترسل له 'N' ليعود لبرنامجه الآلي.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
